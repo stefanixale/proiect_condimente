@@ -1,0 +1,18 @@
+{% extends "aplicatie_condimente/baza.html" %}
+{% load static %}
+{% block titlu %}Despre noi – {{ firma.nume_firma }}{% endblock %}
+
+{% block continut %}
+<h1>Despre noi</h1>
+<img class="imagine-pagina" src="{% static 'imagini/despre.png' %}" alt="Mojar cu piper">
+
+<section id="misiune">
+    <h2>Misiunea noastră</h2>
+    <p>Aducem în bucătăriile din România arome autentice din toată lumea, la calitate constantă.</p>
+</section>
+
+<section id="echipa">
+    <h2>Echipa</h2>
+    <p>Suntem o echipă mică de pasionați de gastronomie, care răspunde la orice întrebare despre condimente.</p>
+</section>
+{% endblock %}

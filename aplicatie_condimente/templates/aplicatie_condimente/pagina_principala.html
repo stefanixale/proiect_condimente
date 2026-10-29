@@ -1,0 +1,35 @@
+{% extends "aplicatie_condimente/baza.html" %}
+{% load static %}
+{% block titlu %}Acasă – {{ firma.nume_firma }}{% endblock %}
+
+{% block continut %}
+<section class="hero" id="descriere">
+    <div class="hero-text">
+        <h1>Bun venit la {{ firma.nume_firma }}</h1>
+        <p>Aplicația web reprezintă un magazin online specializat pe condimente, ierburi aromatice și mixturi tradiționale specifice din diverse colțuri ale lumii, unde utilizatorii vor putea explora produse.</p>
+    </div>
+    <img src="{% static 'imagini/principala.png' %}" alt="Condimente colorate">
+</section>
+
+<section id="categorii">
+    <h2>Categorii de produse</h2>
+    <div class="carduri">
+        <article><h3>Condimente clasice</h3><p>Piper, boia, scorțișoară, cuișoare.</p></article>
+        <article><h3>Ierburi aromatice</h3><p>Busuioc, oregano, cimbru, rozmarin.</p></article>
+        <article><h3>Mixturi tradiționale</h3><p>Garam masala, ras el hanout, za’atar.</p></article>
+    </div>
+</section>
+
+<section id="orar">
+    <h2>Orar de lucru</h2>
+    <p>Luni &ndash; Vineri: 09:00 &ndash; 18:00<br>Sâmbătă: 10:00 &ndash; 14:00<br>Duminică: închis</p>
+</section>
+
+<section id="promotii">
+    <h2>Promoții curente</h2>
+    <ul>
+        <li>Pachetul „Grătar de weekend” &ndash; 15% reducere.</li>
+        <li>Livrare gratuită pentru comenzi peste {{ firma.livrare_gratuita_peste }}.</li>
+    </ul>
+</section>
+{% endblock %}

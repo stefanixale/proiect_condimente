@@ -1,0 +1,19 @@
+{% extends "aplicatie_condimente/baza.html" %}
+{% block titlu %}{{ titlu }}{% endblock %}
+
+{% block continut %}
+<h1>{{ titlu }}</h1>
+<ul>
+    <li>ID: {{ a.id }}</li>
+    <li>IP client: {{ a.ip_client }}</li>
+    <li>URL complet: {{ a.string_url }}</li>
+    <li>Pagina: {{ pagina }}</li>
+    <li>Data: {{ data }}</li>
+    <li>Parametri:
+        {% if parametri %}
+        <ul>{% for nume, valoare in parametri %}<li>{{ nume }} = {{ valoare|default_if_none:"(nesetat)" }}</li>{% endfor %}</ul>
+        {% else %}niciun parametru{% endif %}
+    </li>
+</ul>
+<p><a href="{{ url_log }}">Înapoi la log</a></p>
+{% endblock %}

@@ -1,0 +1,161 @@
+:root {
+    --culoare-principala: #8a3b12;
+    --culoare-accent: #d98324;
+    --culoare-fundal: #fbf4ea;
+    --culoare-text: #2b1b10;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    color: var(--culoare-text);
+    background-color: var(--culoare-fundal);
+    background-image: url("../imagini/fundal.png");
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--culoare-principala);
+    background-image: url("../imagini/fundal_header.png");
+    background-size: cover;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0.8rem 0;
+}
+
+main {
+    max-width: 1000px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+    min-height: 60vh;
+}
+
+main section {
+    background: rgba(255, 255, 255, 0.85);
+    border-left: 5px solid var(--culoare-accent);
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem 1rem;
+    margin-bottom: 1.2rem;
+}
+
+h1, h2, h3 { color: var(--culoare-principala); }
+
+img { max-width: 100%; height: auto; border-radius: 8px; }
+
+footer {
+    background: var(--culoare-principala);
+    color: #f5e6d3;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+}
+footer p { margin: 0.2rem 0; }
+.ip { font-style: italic; }
+
+/* ====== Meniu derulant ====== */
+nav .meniu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav .meniu li { position: relative; }
+
+nav .meniu a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 1rem 1.1rem;
+}
+
+nav .meniu > li:hover > a,
+nav .meniu a:focus { background: var(--culoare-accent); }
+
+.cu-submeniu > a::after { content: " \25BE"; }
+
+.submeniu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: var(--culoare-principala);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cu-submeniu:hover > .submeniu,
+.cu-submeniu:focus-within > .submeniu { display: block; }
+
+.submeniu a { padding: 0.7rem 1rem; }
+.submeniu a:hover { background: var(--culoare-accent); }
+
+/* ====== Pagina principală ====== */
+.hero {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.hero img { width: 45%; }
+.hero-text { flex: 1; }
+
+.carduri {
+    display: flex;
+    gap: 1rem;
+}
+.carduri article {
+    flex: 1;
+    background: #fff;
+    border-radius: 6px;
+    padding: 0 1rem 0.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.imagine-pagina {
+    display: block;
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+/* ====== Log ====== */
+.scroll-x { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; background: #fff; }
+th, td { border: 1px solid #c9b79f; padding: 0.4rem 0.6rem; text-align: left; }
+th { background: var(--culoare-accent); color: #fff; }
+.eroare { color: #a40000; font-weight: bold; }
+
+/* ====== Responsive (ecrane mici) ====== */
+@media (max-width: 800px) {
+    header { flex-direction: column; align-items: flex-start; padding: 0 0.8rem; }
+    nav { width: 100%; }
+    nav .meniu { flex-direction: column; }
+    .submeniu {
+        display: block;
+        position: static;
+        box-shadow: none;
+        background: rgba(0, 0, 0, 0.2);
+    }
+    .submeniu a { padding-left: 2rem; }
+    .hero, .carduri { flex-direction: column; }
+    .hero img { width: 100%; }
+}

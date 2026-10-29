@@ -1,0 +1,67 @@
+{% extends "aplicatie_condimente/baza.html" %}
+{% block titlu %}{{ titlu }}{% endblock %}
+
+{% block continut %}
+<h1>{{ titlu }}</h1>
+
+{% if eroare_fatala %}
+    <p class="eroare">{{ eroare_fatala }}</p>
+{% else %}
+
+    {% if numar_accesari is not None %}
+    <section>
+        <h2>Număr de accesări</h2>
+        <p>De la pornirea serverului au fost {{ numar_accesari }} accesări.</p>
+    </section>
+    {% endif %}
+
+    <section>
+        <h2>Parametri</h2>
+        <p>Număr de parametri primiți: {{ nume_parametri|length }}.
+        {% if nume_parametri %}Nume: {{ nume_parametri|join:", " }}.{% endif %}</p>
+    </section>
+
+    <section>
+        <h2>Accesări</h2>
+        {% if antet %}
+            <div class="scroll-x">
+            <table>
+                <thead><tr>{% for c in antet %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+                <tbody>
+                {% for rand in randuri %}
+                    <tr>{% for celula in rand %}<td>{{ celula }}</td>{% endfor %}</tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% else %}
+            <ul>
+            {% for a, pagina, data in lista %}
+                <li><a href="{% url 'accesare_detalii' a.id %}">Accesarea {{ a.id }}</a> &ndash; pagina {{ pagina }}, IP {{ a.ip_client }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </section>
+
+    {% if detalii %}
+    <section>
+        <h2>Detalii</h2>
+        <ul>
+        {% for id, data in detalii %}
+            <li>Accesarea {{ id }}: {{ data }}</li>
+        {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    <section>
+        <h2>Statistici pagini</h2>
+        <p>Cea mai accesată pagină: {{ pagini_max }} ({{ nr_max }} accesări).</p>
+        <p>Cea mai puțin accesată pagină: {{ pagini_min }} ({{ nr_min }} accesări).</p>
+    </section>
+
+    {% for eroare in erori %}
+        <p class="eroare">{{ eroare }}</p>
+    {% endfor %}
+{% endif %}
+{% endblock %}

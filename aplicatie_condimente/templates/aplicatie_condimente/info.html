@@ -1,0 +1,11 @@
+{% extends "aplicatie_condimente/baza.html" %}
+{% block titlu %}{{ titlu }}{% endblock %}
+
+{% block continut %}
+<h1>{{ titlu }}</h1>
+{{ sectiune_data }}
+<section>
+    <h2>Software</h2>
+    <p>Python {{ versiune_python }}, Django {{ versiune_django }}.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "aplicatie_condimente/baza.html" %}
+{% block titlu %}Istoric – {{ firma.nume_firma }}{% endblock %}
+
+{% block continut %}
+<h1>Istoric</h1>
+<section>
+    <h2>Povestea magazinului</h2>
+    <p>{{ firma.nume_firma }} a fost înființată în {{ firma.an_infiintare }} dintr-o pasiune pentru mirodeniile aduse pe vechile rute comerciale.</p>
+</section>
+{% endblock %}

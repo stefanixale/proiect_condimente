@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titlu %}{{ firma.nume_firma }}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+</head>
+<body>
+<header>
+    <a class="logo" href="{% url 'index' %}">{{ firma.nume_firma }}</a>
+    <nav>
+        <ul class="meniu">
+            <li class="cu-submeniu">
+                <a href="{% url 'index' %}">Acasă</a>
+                <ul class="submeniu">
+                    <li><a href="{% url 'index' %}">Pagina principală</a></li>
+                    <li><a href="{% url 'index' %}#orar">Orar de lucru</a></li>
+                    <li><a href="{% url 'index' %}#promotii">Promoții curente</a></li>
+                </ul>
+            </li>
+            <li class="cu-submeniu">
+                <a href="{% url 'despre' %}">Despre</a>
+                <ul class="submeniu">
+                    <li><a href="{% url 'despre' %}#misiune">Misiunea noastră</a></li>
+                    <li><a href="{% url 'despre' %}#echipa">Echipa</a></li>
+                    <li><a href="{% url 'istoric' %}">Istoric</a></li>
+                </ul>
+            </li>
+            <li class="cu-submeniu">
+                <a href="{% url 'produse' %}">Magazin</a>
+                <ul class="submeniu">
+                    <li><a href="{% url 'produse' %}">Produse</a></li>
+                    <li><a href="{% url 'retete' %}">Rețete</a></li>
+                    <li><a href="{% url 'blog' %}">Blog</a></li>
+                </ul>
+            </li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+            <li><a href="{% url 'cos_virtual' %}">Coș virtual</a></li>
+            <li class="cu-submeniu">
+                <a href="{% url 'info' %}">Tehnic</a>
+                <ul class="submeniu">
+                    <li><a href="{% url 'info' %}">Info server</a></li>
+                    <li><a href="{% url 'log' %}">Log accesări</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    {% block continut %}{% endblock %}
+</main>
+
+<footer>
+    <p>&copy; {{ an_curent }} {{ firma.nume_firma }} &ndash; toate drepturile rezervate. Înființată în {{ firma.an_infiintare }}.</p>
+    <p>Telefon: {{ firma.telefon }} &bull; {{ firma.adresa_sediu }} &bull; {{ firma.email_contact }}</p>
+    <p>Livrare gratuită pentru comenzi peste {{ firma.livrare_gratuita_peste }}.</p>
+    <p class="ip">Adresa ta IP: {{ request.ip }}</p>
+</footer>
+</body>
+</html>
