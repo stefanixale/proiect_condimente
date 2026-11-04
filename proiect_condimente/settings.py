@@ -142,3 +142,7 @@ DATE_FIRMA = {
     "email_contact": "contact@aromalumii.ro",
     "livrare_gratuita_peste": "150 lei",
 }
+
+STOC_MIN = 10        # sub aceasta valoare produsul are stoc limitat
+PROD_PER_PAG = 5     # produse afisate pe o pagina
+PROD_SIMILARE = 3    # produse in sectiunea "Produse din aceeasi categorie"

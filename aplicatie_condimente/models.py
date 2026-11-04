@@ -2,6 +2,8 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models import F, Q
 from django.utils import timezone
+from django.conf import settings
+from django.urls import reverse
 
 
 class Categorie(models.Model):
@@ -194,6 +196,17 @@ class Produs(models.Model):
         blank=True,
         help_text="Poza produsului. Poate fi adăugată și mai târziu.",
     )
+    
+    stoc = models.PositiveIntegerField(
+        default=0,
+        help_text="Numărul de ambalaje disponibile. Sub pragul STOC_MIN din setări, produsul apare ca având stoc limitat.",
+    )
+    taguri = ArrayField(
+        models.CharField(max_length=30),
+        default=list,
+        blank=True,
+        help_text="Cuvinte cheie separate prin virgulă (de exemplu: grătar, picant, vegan). Se folosesc la filtrarea produselor.",
+    )
 
     categorie = models.ForeignKey(
         Categorie,
@@ -236,6 +249,13 @@ class Produs(models.Model):
 
     def __str__(self):
         return f"{self.nume} ({self.gramaj_g} g)"
+    
+    def get_absolute_url(self):
+        return reverse("produs", args=[self.pk])
+
+    @property
+    def stoc_limitat(self):
+        return self.stoc < settings.STOC_MIN
     
 class ArticolBlog(models.Model):
     titlu = models.CharField(
