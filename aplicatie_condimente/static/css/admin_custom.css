@@ -1,0 +1,74 @@
+/* ===== Paleta paginii de administrare (forțată pe tema deschisă) ===== */
+html,
+html[data-theme],
+html[data-theme="light"],
+html[data-theme="dark"],
+html[data-theme="auto"],
+html:not([data-theme]) {
+    color-scheme: light;
+    --body-bg: #fbf4ea;
+    --body-fg: #2b1b10;
+    --body-quiet-color: #6b5a4a;
+    --body-loud-color: #000000;
+    --darkened-bg: #f1e4d0;
+    --border-color: #d9c7ad;
+    --hairline-color: #e6d6bf;
+    --header-bg: #8a3b12;
+    --header-color: #f5e6d3;
+    --header-branding-color: #ffffff;
+    --header-link-color: #ffffff;
+    --breadcrumbs-bg: #d98324;
+    --breadcrumbs-fg: #ffffff;
+    --breadcrumbs-link-fg: #ffffff;
+    --selected-row: #ffd9a0;
+    --selected-bg: #ffd9a0;
+    --primary: #8a3b12;
+    --secondary: #a8501c;
+    --link-fg: #8a3b12;
+    --link-hover-color: #d98324;
+}
+
+/* 1. Culoarea de background a paginii */
+body {
+    background-color: #fbf4ea !important;
+}
+
+/* 2. Header + sigla (imagine) */
+#header {
+    background: #8a3b12 !important;
+}
+#site-name a::before {
+    content: "";
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    margin-right: 10px;
+    vertical-align: middle;
+    background: url("../imagini/logo_admin.png") center / contain no-repeat;
+}
+
+/* 3. Background-ul meniului (bara laterală și titlurile modulelor) */
+#nav-sidebar {
+    background-color: #f3e0c4 !important;
+}
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: #8a3b12 !important;
+    color: #ffffff !important;
+}
+
+/* 4. Culoarea rândului selectat din liste */
+#changelist table tbody tr.selected td,
+#changelist table tbody tr.selected th {
+    background-color: #ffd9a0 !important;
+}
+
+/* 5. Culoarea meniului de tip breadcrumbs */
+div.breadcrumbs {
+    background: #d98324 !important;
+    color: #ffffff !important;
+}
+div.breadcrumbs a {
+    color: #ffffff !important;
+}

@@ -57,7 +57,7 @@ ROOT_URLCONF = 'proiect_condimente.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -143,6 +143,6 @@ DATE_FIRMA = {
     "livrare_gratuita_peste": "150 lei",
 }
 
-STOC_MIN = 10        # sub aceasta valoare produsul are stoc limitat
-PROD_PER_PAG = 5     # produse afisate pe o pagina
-PROD_SIMILARE = 3    # produse in sectiunea "Produse din aceeasi categorie"
+STOC_MIN = 10        
+PROD_PER_PAG = 5     
+PROD_SIMILARE = 3    
