@@ -1,0 +1,10 @@
+{% extends "aplicatie_condimente/baza.html" %}
+{% block titlu %}{{ titlu }} – {{ firma.nume_firma }}{% endblock %}
+
+{% block continut %}
+<section>
+    <h1>{{ titlu }}</h1>
+    <p class="eroare">{{ mesaj }}</p>
+    <p><a href="{% url 'produse' %}">Înapoi la lista de produse</a></p>
+</section>
+{% endblock %}

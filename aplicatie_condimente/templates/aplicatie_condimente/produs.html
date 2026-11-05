@@ -1,0 +1,68 @@
+{% extends "aplicatie_condimente/baza.html" %}
+{% load static %}
+{% block titlu %}{{ p.nume }} – {{ firma.nume_firma }}{% endblock %}
+
+{% block continut %}
+<section class="produs-detaliat" style="--culoare: {{ p.categorie.culoare }};">
+    {% if p.stoc_limitat %}<span class="stoc-limitat">Stoc limitat</span>{% endif %}
+
+    <div class="produs-imagine">
+        {% if p.imagine %}
+            <img src="{{ p.imagine.url }}" alt="{{ p.nume }}">
+        {% else %}
+            <img src="{% static 'imagini/indisponibil.png' %}" alt="Imagine indisponibilă">
+        {% endif %}
+    </div>
+
+    <div class="produs-text">
+        <h1>{{ p.nume }}</h1>
+        <p class="categorie-produs">
+            <a href="{{ p.categorie.get_absolute_url }}">
+                {% if p.categorie.sigla %}<i class="fa-solid {{ p.categorie.sigla }}"></i>{% endif %}
+                {{ p.categorie.nume }}
+            </a>
+        </p>
+        <p>{{ p.descriere|default:"Fără descriere." }}</p>
+
+        <table class="detalii">
+            <tr><th>Preț</th><td>{{ p.pret }} lei</td></tr>
+            <tr><th>Gramaj</th><td>{{ p.gramaj_g }} g</td></tr>
+            <tr><th>Nivel de iuțeală</th><td>{{ p.get_nivel_iute_display }}</td></tr>
+            <tr><th>Produs bio</th><td>{% if p.este_bio %}Da{% else %}Nu{% endif %}</td></tr>
+            <tr><th>Stoc</th><td>{{ p.stoc }} ambalaje</td></tr>
+            <tr><th>Furnizor</th><td>{{ p.furnizor.nume }} ({{ p.furnizor.tara_origine }})</td></tr>
+            <tr><th>Alergeni</th><td>{% if p.alergeni %}{{ p.alergeni|join:", " }}{% else %}Niciunul declarat{% endif %}</td></tr>
+            <tr><th>Adăugat la</th><td>{{ p.data_adaugare|date:"d.m.Y H:i" }}</td></tr>
+        </table>
+
+        <p class="taguri">
+            {% for t, link in taguri_linkuri %}
+                <a class="tag" href="{{ link }}">{{ t }}</a>
+            {% endfor %}
+        </p>
+    </div>
+</section>
+
+<section>
+    <h2>Produse din aceeași categorie</h2>
+    {% if similare %}
+    <div class="grila-produse">
+        {% for s in similare %}
+        <article class="produs mic" style="--culoare: {{ s.categorie.culoare }};">
+            <a href="{{ s.get_absolute_url }}">
+                {% if s.imagine %}
+                    <img src="{{ s.imagine.url }}" alt="{{ s.nume }}">
+                {% else %}
+                    <img src="{% static 'imagini/indisponibil.png' %}" alt="Imagine indisponibilă">
+                {% endif %}
+            </a>
+            <h3><a href="{{ s.get_absolute_url }}">{{ s.nume }}</a></h3>
+            <p><a href="{{ s.get_absolute_url }}"><strong>{{ s.pret }} lei</strong></a></p>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>Nu există alte produse în această categorie.</p>
+    {% endif %}
+</section>
+{% endblock %}

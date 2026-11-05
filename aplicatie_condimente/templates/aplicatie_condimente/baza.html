@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block titlu %}{{ firma.nume_firma }}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 <header>
@@ -34,6 +35,14 @@
                     <li><a href="{% url 'produse' %}">Produse</a></li>
                     <li><a href="{% url 'retete' %}">Rețete</a></li>
                     <li><a href="{% url 'blog' %}">Blog</a></li>
+                </ul>
+            </li>
+            <li class="cu-submeniu">
+                <a href="{% url 'produse' %}">Categorii</a>
+                <ul class="submeniu">
+                    {% for c in categorii_meniu %}
+                    <li><a href="{{ c.get_absolute_url }}"><i class="fa-solid {{ c.sigla }}"></i> {{ c.nume }}</a></li>
+                    {% endfor %}
                 </ul>
             </li>
             <li><a href="{% url 'contact' %}">Contact</a></li>

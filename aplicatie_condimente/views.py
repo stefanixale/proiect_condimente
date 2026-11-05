@@ -2,13 +2,17 @@ import platform
 import re
 from collections import Counter
 from datetime import datetime
-from urllib.parse import urlparse
+from urllib.parse import urlencode, urlparse
 
 import django
 from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.conf import settings
+from django.core.paginator import Paginator
+
+from .models import Categorie, Produs
 
 PREFIX_APLICATIE = "/aplicatie_condimente"
 
@@ -237,11 +241,6 @@ def accesare_detalii(request, id_accesare):
 def _in_lucru(request, nume):
     return render(request, T + "in_lucru.html", {"pagina": nume})
 
-
-def produse(request):
-    return _in_lucru(request, "Produse")
-
-
 def contact(request):
     return _in_lucru(request, "Contact")
 
@@ -256,3 +255,123 @@ def retete(request):
 
 def blog(request):
     return _in_lucru(request, "Blog")
+
+# ---------- catalogul de produse ----------
+
+COLOANE_SORTARE = {
+    "nume": ("Nume", "nume"),
+    "pret": ("Preț", "pret"),
+    "gramaj": ("Gramaj", "gramaj_g"),
+    "stoc": ("Stoc", "stoc"),
+    "data": ("Data adăugării", "data_adaugare"),
+}
+
+
+def _query_string(col, sort, taguri, pagina=None):
+    parametri = [("col", col), ("sort", sort)]
+    parametri += [("tag", t) for t in taguri]
+    if pagina is not None:
+        parametri.append(("pagina", pagina))
+    return "?" + urlencode(parametri)
+
+
+def _afiseaza_produse(request, produse, context_extra=None):
+    """Logica comuna pentru pagina cu toate produsele si pentru paginile categoriilor:
+    filtrare dupa taguri, sortare si paginare."""
+    col = request.GET.get("col", "nume")
+    if col not in COLOANE_SORTARE:
+        col = "nume"
+    sort = request.GET.get("sort", "a")
+    if sort not in ("a", "d"):
+        sort = "a"
+
+    taguri_active = []
+    for t in request.GET.getlist("tag"):
+        t = t.strip()
+        if t and t not in taguri_active:
+            taguri_active.append(t)
+
+    if taguri_active:
+        produse = produse.filter(taguri__contains=taguri_active)
+
+    camp = COLOANE_SORTARE[col][1]
+    produse = produse.select_related("categorie").order_by(
+        camp if sort == "a" else "-" + camp, "pk")
+
+    paginator = Paginator(produse, settings.PROD_PER_PAG)
+    pagina = paginator.get_page(request.GET.get("pagina"))
+
+    lista = list(pagina.object_list)
+    for p in lista:
+        p.taguri_linkuri = [
+            (t,
+             _query_string(col, sort, taguri_active if t in taguri_active else taguri_active + [t]),
+             t in taguri_active)
+            for t in p.taguri
+        ]
+
+    context = {
+        "produse": lista,
+        "total": paginator.count,
+        "de_la": pagina.start_index(),
+        "pana_la": pagina.end_index(),
+        "nr_pagina": pagina.number,
+        "total_pagini": paginator.num_pages,
+        "link_anterior": _query_string(col, sort, taguri_active, pagina.previous_page_number())
+        if pagina.has_previous() else None,
+        "link_urmator": _query_string(col, sort, taguri_active, pagina.next_page_number())
+        if pagina.has_next() else None,
+        "taguri_active": [
+            (t, _query_string(col, sort, [x for x in taguri_active if x != t]))
+            for t in taguri_active
+        ],
+        "optiuni_sortare": [
+            (eticheta, c, _query_string(c, "a", taguri_active), _query_string(c, "d", taguri_active))
+            for c, (eticheta, _) in COLOANE_SORTARE.items()
+        ],
+        "col": col,
+        "sort": sort,
+    }
+    if context_extra:
+        context.update(context_extra)
+    return render(request, T + "produse.html", context)
+
+
+def produse(request):
+    return _afiseaza_produse(request, Produs.objects.all())
+
+def produs(request, id_produs):
+    try:
+        p = Produs.objects.select_related("categorie", "furnizor").get(pk=id_produs)
+    except Produs.DoesNotExist:
+        return render(request, T + "eroare.html", {
+            "titlu": "Produs inexistent",
+            "mesaj": f"Nu există niciun produs cu numărul {id_produs}.",
+        }, status=404)
+
+    # K produse alese aleator din aceeasi categorie (fara produsul curent)
+    similare = (Produs.objects.filter(categorie=p.categorie)
+                .exclude(pk=p.pk)
+                .order_by("?")[:settings.PROD_SIMILARE])
+
+    taguri_linkuri = [
+        (t, reverse("produse") + "?" + urlencode([("tag", t)]))
+        for t in p.taguri
+    ]
+    return render(request, T + "produs.html", {
+        "p": p,
+        "similare": similare,
+        "taguri_linkuri": taguri_linkuri,
+    })
+
+
+def categorie(request, nume):
+    try:
+        cat = Categorie.objects.get(nume=nume)
+    except Categorie.DoesNotExist:
+        return render(request, T + "eroare.html", {
+            "titlu": "Categorie inexistentă",
+            "mesaj": f"Nu există nicio categorie cu numele „{nume}”.",
+        }, status=404)
+    return _afiseaza_produse(request, Produs.objects.filter(categorie=cat),
+                             {"categorie_curenta": cat})

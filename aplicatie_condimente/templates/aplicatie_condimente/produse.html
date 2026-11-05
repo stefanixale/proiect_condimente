@@ -1,0 +1,85 @@
+{% extends "aplicatie_condimente/baza.html" %}
+{% load static %}
+{% block titlu %}{% if categorie_curenta %}{{ categorie_curenta.nume }}{% else %}Produse{% endif %} – {{ firma.nume_firma }}{% endblock %}
+
+{% block continut %}
+
+{% if categorie_curenta %}
+<section class="antet-categorie" style="--culoare: {{ categorie_curenta.culoare }};">
+    <h1>
+        {% if categorie_curenta.sigla %}<i class="fa-solid {{ categorie_curenta.sigla }}"></i>{% endif %}
+        {{ categorie_curenta.nume }}
+    </h1>
+    <p>{{ categorie_curenta.descriere }}</p>
+</section>
+{% else %}
+<h1>Toate produsele</h1>
+{% endif %}
+
+<section class="sortare">
+    <strong>Sortează după:</strong>
+    {% for eticheta, c, link_a, link_d in optiuni_sortare %}
+        <span class="optiune-sortare{% if col == c %} curenta{% endif %}">
+            {{ eticheta }}
+            <a href="{{ link_a }}" title="Crescător"{% if col == c and sort == 'a' %} class="activa"{% endif %}>&#9650;</a>
+            <a href="{{ link_d }}" title="Descrescător"{% if col == c and sort == 'd' %} class="activa"{% endif %}>&#9660;</a>
+        </span>
+    {% endfor %}
+</section>
+
+{% if taguri_active %}
+<section class="filtre-active">
+    <strong>Filtre active:</strong>
+    {% for t, link in taguri_active %}
+        <a class="buton-tag" href="{{ link }}">{{ t }} &#10005;</a>
+    {% endfor %}
+</section>
+{% endif %}
+
+{% if total == 0 %}
+    <p>Nu există produse care să corespundă filtrelor alese.</p>
+{% else %}
+    <p class="info-afisare">Se afișează produsele între {{ de_la }} și {{ pana_la }} din totalul de {{ total }} produse.</p>
+
+    {% include "aplicatie_condimente/paginare.html" %}
+
+    <div class="grila-produse">
+    {% for p in produse %}
+        <article class="produs" style="--culoare: {{ p.categorie.culoare }};">
+            {% if p.stoc_limitat %}<span class="stoc-limitat">Stoc limitat</span>{% endif %}
+
+            {% if p.imagine %}
+                <img src="{{ p.imagine.url }}" alt="{{ p.nume }}">
+            {% else %}
+                <img src="{% static 'imagini/indisponibil.png' %}" alt="Imagine indisponibilă">
+            {% endif %}
+
+            <h3><a href="{{ p.get_absolute_url }}">{{ p.nume }}</a></h3>
+
+            <p class="categorie-produs">
+                <a href="{{ p.categorie.get_absolute_url }}">
+                    {% if p.categorie.sigla %}<i class="fa-solid {{ p.categorie.sigla }}"></i>{% endif %}
+                    {{ p.categorie.nume }}
+                </a>
+            </p>
+
+            <ul class="specificatii">
+                <li>Preț: <strong>{{ p.pret }} lei</strong></li>
+                <li>Gramaj: {{ p.gramaj_g }} g</li>
+                <li>Iuțeală: {{ p.get_nivel_iute_display }}</li>
+                {% if p.este_bio %}<li>Produs bio</li>{% endif %}
+            </ul>
+
+            <p class="taguri">
+                {% for t, link, activ in p.taguri_linkuri %}
+                    <a class="tag{% if activ %} activ{% endif %}" href="{{ link }}">{{ t }}</a>
+                {% endfor %}
+            </p>
+        </article>
+    {% endfor %}
+    </div>
+
+    {% include "aplicatie_condimente/paginare.html" %}
+{% endif %}
+
+{% endblock %}

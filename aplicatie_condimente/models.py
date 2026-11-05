@@ -52,6 +52,9 @@ class Categorie(models.Model):
 
     def __str__(self):
         return self.nume
+    
+    def get_absolute_url(self):
+        return reverse("categorie", args=[self.nume])
 
 
 class Furnizor(models.Model):
